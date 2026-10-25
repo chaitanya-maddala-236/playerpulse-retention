@@ -13,6 +13,6 @@ COPY alembic.ini ./alembic.ini
 COPY artifacts/models/playerpulse-synthetic-v1 ./artifacts/models/playerpulse-synthetic-v1
 RUN python -m pip install --no-cache-dir .
 USER app
-EXPOSE 8000
-HEALTHCHECK --interval=15s --timeout=4s --start-period=20s --retries=5 CMD ["python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/ready', timeout=3)"]
-CMD ["uvicorn", "playerpulse.api:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "1", "--timeout-keep-alive", "10"]
+EXPOSE 10000
+HEALTHCHECK --interval=15s --timeout=4s --start-period=20s --retries=5 CMD ["python", "-c", "import os, urllib.request; urllib.request.urlopen('http://127.0.0.1:' + os.getenv('PORT', '10000') + '/ready', timeout=3)"]
+CMD ["sh", "-c", "exec uvicorn playerpulse.api:app --host 0.0.0.0 --port \"${PORT:-10000}\" --workers 1 --timeout-keep-alive 10"]

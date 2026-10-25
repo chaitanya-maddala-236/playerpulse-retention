@@ -30,6 +30,8 @@ services:
         value: "true"
       - key: MODEL_DIR
         value: /app/artifacts/models/playerpulse-synthetic-v1
+      - key: PORT
+        value: "10000"
       - key: DATABASE_URL
         sync: false
   - type: web
@@ -49,3 +51,5 @@ services:
           property: host
       - key: PLAYERPULSE_ENV
         value: production
+      - key: PORT
+        value: "10000"

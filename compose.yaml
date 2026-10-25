@@ -27,6 +27,7 @@ services:
       PLAYERPULSE_ENV: development
       DEMO_MODE: ${DEMO_MODE:-true}
       ALLOWED_ORIGINS: ${ALLOWED_ORIGINS:-http://localhost:8501}
+      PORT: "8000"
     depends_on:
       db:
         condition: service_healthy
@@ -48,6 +49,7 @@ services:
       API_KEY: ${PREDICTION_API_KEY:-}
       DASHBOARD_ACCESS_KEY: ${DASHBOARD_ACCESS_KEY:-}
       PLAYERPULSE_ENV: development
+      PORT: "8501"
     depends_on:
       api:
         condition: service_healthy
