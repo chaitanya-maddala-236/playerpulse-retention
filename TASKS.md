@@ -10,5 +10,7 @@
 - [x] Add delayed outcome, drift review, monitoring visuals, and dashboard access controls.
 - [x] Add targeted tests, Ruff config, Compose, Dockerfiles, health checks, CI, and Render blueprint.
 - [x] Install the pinned Python stack and run training, tests, lint, Docker builds, API smoke tests, and load test where the daemon permits.
-- [ ] Publish to the authenticated GitHub account and deploy if available authorization supports it.
-- [ ] Record only verified repository, deployment, and measurement results.
+- [x] Publish the repository to GitHub and make it public.
+- [x] Deploy on Neon and Render; record verified health checks and the current dashboard/API limitation.
+- [ ] Fix dashboard-to-API connectivity and verify an authenticated prediction with Neon persistence.
+- [x] Record verified repository, deployment, and measurement results with their limitations.
