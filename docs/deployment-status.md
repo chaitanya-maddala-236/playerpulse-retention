@@ -2,18 +2,19 @@
 
 Last checked: 2026-10-26.
 
-## Workspace and access
+## Render and Neon
 
-- A separate PlayerPulse churn repository was created at `playerpulse-retention/`; the workspace's unrelated GameGuard project and raw telemetry remain separate.
-- Python 3.11 and 3.13 are installed. Docker CLI exists; the Docker Engine did not return a server version.
-- Git Credential Manager lists account `chaitanya-maddala-236`. No GitHub CLI or Render API token is present in environment variables.
-- Local Docker Compose API, dashboard, and Postgres containers passed their health checks. The API reports 600 explicitly synthetic demo predictions; the dashboard returned HTTP 200.
-- No live hosted service, URL, secret, or Neon database has been provisioned or verified.
+- The Render Blueprint `PlayerPulse` provisions two free web services in Oregon: `playerpulse-api` and `playerpulse-dashboard`.
+- API: [https://playerpulse-api-ckg3.onrender.com](https://playerpulse-api-ckg3.onrender.com). The `/ready` endpoint returned ready, including model and database checks against the Neon Postgres database. The check ran against commit `8b8b409`.
+- Dashboard: [https://playerpulse-dashboard.onrender.com](https://playerpulse-dashboard.onrender.com). The Streamlit health endpoint returned HTTP 200, and the configured access-key gate loaded and unlocked.
+- The dashboard currently cannot reach the API: its configured API host resolves to `playerpulse-api-ckg3`, which failed DNS resolution from the dashboard service. The API is healthy on its public URL, but data-backed dashboard views may show “API unavailable.”
+- A request to `/v1/predict` without `X-API-Key` returned HTTP 401 as expected. A valid authenticated prediction and resulting Neon persistence were not verified.
+- Render's free services may spin down when idle, so the first request can take around 50 seconds or longer. No paid service plan is configured.
 
-## Hosting path
+## Credentials and data
 
-`render.yaml` declares the API and dashboard and expects a Neon pooled Postgres connection string as `DATABASE_URL`. Render generates the API key, dashboard access key, and player pseudonym secret. Neon credentials are not stored in this repository. No cloud resource was provisioned.
+The pooled Neon `DATABASE_URL` and generated API, dashboard-access, and player-hashing secrets are configured in provider settings only. They are not stored in this repository. The deployed model and all evaluation data are synthetic; do not use the demo with sensitive player data.
 
-## Verification record
+## Follow-up
 
-Update this file only after repository publication, Neon database/API/dashboard deployment, live health checks, a valid and invalid prediction smoke test, and observed persistence. Record actual URLs and results; currently no live URL is verified.
+The remaining deployment issue is the dashboard's API base URL configuration in `render.yaml`. It needs a public API URL (or a correctly configured private-network hostname), followed by a new deploy and authenticated prediction/history smoke test. No such change or redeploy has been made as part of the README cleanup.
