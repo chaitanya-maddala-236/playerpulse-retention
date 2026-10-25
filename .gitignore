@@ -1,0 +1,15 @@
+.env
+.venv/
+*.egg-info/
+__pycache__/
+*.py[cod]
+*.db
+.coverage
+dist/
+build/
+.pytest_cache/
+.ruff_cache/
+.streamlit/secrets.toml
+data/raw/**
+!data/raw/.gitkeep
+*.log

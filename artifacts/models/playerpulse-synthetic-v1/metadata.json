@@ -1,0 +1,127 @@
+{
+  "model_version": "playerpulse-synthetic-v1",
+  "application_version": "0.1.0",
+  "created_at_utc": "2026-10-25T19:24:46.603511+00:00",
+  "dataset_version": "synthetic-events-v1",
+  "dataset_is_synthetic": true,
+  "random_seed": 42,
+  "n_players": 3000,
+  "prediction_horizon_days": 14,
+  "feature_window_days": 30,
+  "selected_model": "logistic_regression_balanced",
+  "threshold": 0.4275464647219525,
+  "features": [
+    "sessions_7d",
+    "sessions_30d",
+    "playtime_7d_hours",
+    "playtime_30d_hours",
+    "days_since_last_session"
+  ],
+  "training_feature_reference": {
+    "sessions_7d": {
+      "edges": [
+        1.0,
+        2.0,
+        3.0
+      ],
+      "proportions": [
+        0.3904761904761905,
+        0.22904761904761906,
+        0.18285714285714286,
+        0.1976190476190476
+      ]
+    },
+    "sessions_30d": {
+      "edges": [
+        1.0,
+        2.0,
+        3.0,
+        5.0,
+        7.0,
+        8.0,
+        10.0,
+        12.0
+      ],
+      "proportions": [
+        0.15285714285714286,
+        0.13857142857142857,
+        0.0980952380952381,
+        0.09428571428571429,
+        0.09476190476190476,
+        0.06571428571428571,
+        0.13142857142857142,
+        0.09142857142857143,
+        0.13285714285714287
+      ]
+    },
+    "playtime_7d_hours": {
+      "edges": [
+        0.11484000000000001,
+        0.5913999999999999,
+        0.97152,
+        1.4042700000000001,
+        1.9489,
+        2.7591900000000007
+      ],
+      "proportions": [
+        0.4,
+        0.1,
+        0.1,
+        0.1,
+        0.1,
+        0.1,
+        0.1
+      ]
+    },
+    "playtime_30d_hours": {
+      "edges": [
+        0.4589200000000001,
+        1.10297,
+        2.03284,
+        3.48085,
+        4.874820000000001,
+        6.36522,
+        7.710319999999999,
+        9.426860000000001
+      ],
+      "proportions": [
+        0.2,
+        0.1,
+        0.1,
+        0.1,
+        0.1,
+        0.1,
+        0.1,
+        0.1,
+        0.1
+      ]
+    },
+    "days_since_last_session": {
+      "edges": [
+        1.0,
+        2.0,
+        4.0,
+        6.0,
+        10.0,
+        20.0
+      ],
+      "proportions": [
+        0.18904761904761905,
+        0.12666666666666668,
+        0.1676190476190476,
+        0.09571428571428571,
+        0.10666666666666667,
+        0.10904761904761905,
+        0.20523809523809525
+      ]
+    }
+  },
+  "evaluation_file": "metrics.json",
+  "python_version": "3.11.9",
+  "dependencies": {
+    "numpy": "2.2.2",
+    "pandas": "2.2.3",
+    "scikit-learn": "1.6.1",
+    "joblib": "1.4.2"
+  }
+}

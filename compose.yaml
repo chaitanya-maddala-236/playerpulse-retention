@@ -1,0 +1,63 @@
+services:
+  db:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: playerpulse
+      POSTGRES_USER: playerpulse
+      POSTGRES_PASSWORD: playerpulse
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U playerpulse -d playerpulse"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: ${DATABASE_URL:-postgresql+psycopg://playerpulse:playerpulse@db:5432/playerpulse}
+      MODEL_DIR: /app/artifacts/models/playerpulse-synthetic-v1
+      PREDICTION_API_KEY: ${PREDICTION_API_KEY:-}
+      PLAYER_ID_HASH_SECRET: ${PLAYER_ID_HASH_SECRET:-local-demo-hash-key-change-before-deploy}
+      PLAYERPULSE_ENV: development
+      DEMO_MODE: ${DEMO_MODE:-true}
+      ALLOWED_ORIGINS: ${ALLOWED_ORIGINS:-http://localhost:8501}
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "8000:8000"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/ready', timeout=3)"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+
+  dashboard:
+    build:
+      context: .
+      dockerfile: Dockerfile.dashboard
+    restart: unless-stopped
+    environment:
+      API_BASE_URL: http://api:8000
+      API_KEY: ${PREDICTION_API_KEY:-}
+      DASHBOARD_ACCESS_KEY: ${DASHBOARD_ACCESS_KEY:-}
+      PLAYERPULSE_ENV: development
+    depends_on:
+      api:
+        condition: service_healthy
+    ports:
+      - "8501:8501"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8501/_stcore/health', timeout=3)"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+
+volumes:
+  postgres_data:

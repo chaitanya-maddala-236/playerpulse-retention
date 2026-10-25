@@ -1,0 +1,18 @@
+FROM python:3.11-slim
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PIP_NO_CACHE_DIR=1 \
+    PLAYERPULSE_ROOT=/app
+WORKDIR /app
+RUN addgroup --system app && adduser --system --ingroup app --home /home/app app
+COPY pyproject.toml README.md ./
+COPY src ./src
+COPY migrations ./migrations
+COPY alembic.ini ./alembic.ini
+COPY artifacts/models/playerpulse-synthetic-v1 ./artifacts/models/playerpulse-synthetic-v1
+RUN python -m pip install --no-cache-dir .
+USER app
+EXPOSE 8000
+HEALTHCHECK --interval=15s --timeout=4s --start-period=20s --retries=5 CMD ["python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/ready', timeout=3)"]
+CMD ["uvicorn", "playerpulse.api:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "1", "--timeout-keep-alive", "10"]

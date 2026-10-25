@@ -1,0 +1,49 @@
+previewsEnabled: false
+envVarGroups:
+  - name: playerpulse-shared-secrets
+    envVars:
+      - key: PREDICTION_API_KEY
+        generateValue: true
+  - name: playerpulse-api-secrets
+    envVars:
+      - key: PLAYER_ID_HASH_SECRET
+        generateValue: true
+  - name: playerpulse-dashboard-secrets
+    envVars:
+      - key: DASHBOARD_ACCESS_KEY
+        generateValue: true
+services:
+  - type: web
+    name: playerpulse-api
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile.api
+    dockerContext: .
+    healthCheckPath: /ready
+    envVars:
+      - fromGroup: playerpulse-shared-secrets
+      - fromGroup: playerpulse-api-secrets
+      - key: PLAYERPULSE_ENV
+        value: production
+      - key: DEMO_MODE
+        value: "true"
+      - key: MODEL_DIR
+        value: /app/artifacts/models/playerpulse-synthetic-v1
+      - key: DATABASE_URL
+        sync: false
+  - type: web
+    name: playerpulse-dashboard
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile.dashboard
+    dockerContext: .
+    envVars:
+      - fromGroup: playerpulse-shared-secrets
+      - fromGroup: playerpulse-dashboard-secrets
+      - key: API_BASE_URL
+        fromService:
+          type: web
+          name: playerpulse-api
+          property: host
+      - key: PLAYERPULSE_ENV
+        value: production
